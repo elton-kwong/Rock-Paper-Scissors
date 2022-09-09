@@ -14,7 +14,8 @@ function getComputerChoice() {
 const scoreboard = [];
 
 function spellCheck(options) {
-    return choices.includes(options);
+    let checkers = options.toLowerCase();
+    return choices.includes(checkers);
 }
 
 for (let i = 1; i <= 5; i++) {
@@ -29,6 +30,9 @@ function game() {
     while (check == false) {
         playerSelection = prompt("Please choose a valid option. Make sure your spelling is correct!");
         check = spellCheck(playerSelection);
+    } 
+    if (check == true) {
+        playerSelection = playerSelection.toLowerCase();
     }
     const computerSelection = getComputerChoice();
     console.log(`You chose ${playerSelection}`);
