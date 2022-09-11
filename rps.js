@@ -31,27 +31,25 @@ function game() {
         playerSelection = prompt("Please choose a valid option. Make sure your spelling is correct!");
         check = spellCheck(playerSelection);
     } 
-    if (check == true) {
-        playerSelection = playerSelection.toLowerCase();
-    }
+    let playerChoice = playerSelection.toLowerCase();
     const computerSelection = getComputerChoice();
-    console.log(`You chose ${playerSelection}`);
+    console.log(`You chose ${playerChoice}`);
     console.log(`Computer chose ${computerSelection}`);
-    console.log(playRound(playerSelection, computerSelection));
+    console.log(playRound(playerChoice, computerSelection));
     console.log("----------------------------------------------------------------------------------------------------");
-    const scores = playRound(playerSelection, computerSelection);
+    const scores = playRound(playerChoice, computerSelection);
     scoreboard.push(scores);
 }
 
-function playRound(playerSelection, computerSelection) {
+function playRound(playerChoice, computerSelection) {
     let results; 
 
-    if (playerSelection === computerSelection) {
+    if (playerChoice === computerSelection) {
         results = "Tie";
     } else if (
-        playerSelection === "rock" && computerSelection === "paper" || 
-        playerSelection === "paper" && computerSelection === "scissors" || 
-        playerSelection === "scissors" && computerSelection === "rock") {
+        playerChoice === "rock" && computerSelection === "paper" || 
+        playerChoice === "paper" && computerSelection === "scissors" || 
+        playerChoice === "scissors" && computerSelection === "rock") {
         results = "Computer Wins";
     } else {
         results = "Player Wins";
