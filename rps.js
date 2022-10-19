@@ -4,103 +4,129 @@
 //computer result vs player result each round --> enter output (eg. player wins: paper beats rock!)
 //use for loop to play multiple rounds (ie. best of 5, etcs)
 
-const choices = ["rock", "paper", "scissors"];
-function getComputerChoice() {
-    return choices[Math.floor(Math.random()*choices.length)];
-}
+//set up game to be ready for play
+function start() {
+    let fullScoreboard = [];
+    let playerResults = 0;
+    let computerResults = 0;
+    let tieResults = 0;
 
-// console.log(getComputerChoice(choices))
+    //create div to store the scores and results
+    const container = document.querySelector("#button-container");
+    const rpsDiv = document.createElement("div");
+    rpsDiv.style.margin = "10px";
+    container.appendChild(rpsDiv);
 
-const scoreboard = [];
+    //displays the outcome of the current round
+    const currentScore = document.createElement("div");
+    currentScore.style.color = "green";
+    currentScore.textContent = "Result This Round: ";
+    currentScore.style.margin = "20px 0px";
+    rpsDiv.appendChild(currentScore);
 
-function spellCheck(options) {
-    let checkers = options.toLowerCase();
-    return choices.includes(checkers);
-}
+    //displays number of times player has won
+    const playerScore = document.createElement("div");
+    playerScore.style.color = "blue";
+    playerScore.textContent = "Number of Player Wins: " + playerResults;
+    playerScore.style.margin = "20px 0px";
+    rpsDiv.appendChild(playerScore);
 
-for (let i = 1; i <= 5; i++) {
-    console.log(`Round: ${i}`);
-    game();
-}
+    //displays number of times computer has won
+    const computerScore = document.createElement("div");
+    computerScore.style.color = "blue";
+    computerScore.textContent = "Number of Computer Wins: " + computerResults;
+    computerScore.style.margin = "20px 0px";
+    rpsDiv.appendChild(computerScore);
 
-function game() {
-    let initialSelection = prompt("Rock, Paper or Scissors?");
-    let playerSelection = initialSelection.toLowerCase();
-    let check = spellCheck(playerSelection);
-    while (check == false) {
-        playerSelection = prompt("Please choose a valid option. Make sure your spelling is correct!");
-        check = spellCheck(playerSelection);
-    } 
-    let playerChoice = playerSelection.toLowerCase();
-    const computerSelection = getComputerChoice();
-    console.log(`You chose ${playerChoice}`);
-    console.log(`Computer chose ${computerSelection}`);
-    console.log(playRound(playerChoice, computerSelection));
-    console.log("----------------------------------------------------------------------------------------------------");
-    const scores = playRound(playerChoice, computerSelection);
-    scoreboard.push(scores);
-}
+    //displays number of times computer has won
+    const tieScore = document.createElement("div");
+    tieScore.style.color = "blue";
+    tieScore.textContent = "Number of Ties: " + tieResults;
+    tieScore.style.margin = "20px 0px";
+    rpsDiv.appendChild(tieScore);
 
-function playRound(playerChoice, computerSelection) {
-    let results; 
+    //keeps track of ALL the results round by round in case you were curious
+    const fullScore = document.createElement("div");
+    fullScore.style.color = "grey";
+    fullScore.textContent = "Full Score Results: ";
+    fullScore.style.margin = "20px 0px";
+    rpsDiv.appendChild(fullScore);
 
-    if (playerChoice === computerSelection) {
-        results = "Tie";
-    } else if (
-        playerChoice === "rock" && computerSelection === "paper" || 
-        playerChoice === "paper" && computerSelection === "scissors" || 
-        playerChoice === "scissors" && computerSelection === "rock") {
-        results = "Computer Wins";
-    } else {
-        results = "Player Wins";
+    //displays the final winner of the first to 5
+    const gameWinner = document.createElement("div");
+    gameWinner.style.color = "red";
+    rpsDiv.appendChild(gameWinner);
+
+    //addEventListener to 3 buttons in HTML
+    const button = document.getElementById("button-container");
+    button.addEventListener("click", (e) => {
+        if(e.target.id == "rock") {
+            attempt = "rock";
+            game();
+        } else if(e.target.id == "paper") {
+            attempt = "paper";
+            game();
+        } else if(e.target.id == "scissors") {
+            attempt = "scissors";
+            game();
+        }
+    });
+
+    //runs the game after a button has been pressed
+    function game() {
+        let playerChoice = attempt;
+        const computerSelection = getComputerChoice();
+        const scores = playRound(playerChoice, computerSelection);
+        fullScoreboard.push(" " + scores);
+        fullScore.textContent = "Full Score Results: " + fullScoreboard;
+        if (scores == "Player Wins") {
+            playerScore.textContent = "Number of Player Wins: " + ++playerResults;
+        } else if (scores == "Computer Wins") {
+            computerScore.textContent = "Number of Computer Wins: " + ++computerResults;
+        } else {
+            tieScore.textContent = "Number of Ties: " + ++ tieResults;
+        }
+        currentScore.textContent = "Result This Round: " + scores;
+        endGame();
     }
 
-    return results;
-    // if (playerSelection == "rock") {
-    //     if (computerSelection == "paper") {
-    //         return "You lose! Paper beats Rock!";
-    //     } else if (computerSelection == "scissors") {
-    //         return "You win! Rock beats Scissors!";
-    //     } else {
-    //         return "You tied! We both chose Rock!";
-    //     }
-    // }
+    //generate random choice for computer
+    const choices = ["rock", "paper", "scissors"];
+    function getComputerChoice() {
+        return choices[Math.floor(Math.random()*choices.length)];
+    }
 
-    // else if (playerSelection == "paper") {
-    //     if (computerSelection == "scissors") {
-    //         return "You lose! Scissors beats Paper!";
-    //     } else if (computerSelection == "rock") {
-    //         return "You win! Paper beats Rock!";
-    //     } else {
-    //         return "You tied! We both chose Paper!";
-    //     }
-    // }
+    //match player vs computer and decide the winner each round
+    function playRound(playerChoice, computerSelection) {
+        let results; 
 
-    // else if (playerSelection == "scissors") {
-    //     if (computerSelection == "rock") {
-    //         return "You lose! Rock beats Scissors!";
-    //     } else if (computerSelection == "paper") {
-    //         return "You win! Scissors beats Paper!";
-    //     } else {
-    //         return "You tied! We both chose Scissors!";
-    //     }
-    // }
+        if (playerChoice === computerSelection) {
+            results = "Tie";
+        } else if (
+            playerChoice === "rock" && computerSelection === "paper" || 
+            playerChoice === "paper" && computerSelection === "scissors" || 
+            playerChoice === "scissors" && computerSelection === "rock") {
+            results = "Computer Wins";
+        } else {
+            results = "Player Wins";
+        }
+        return results;
+    }
+
+    //provide prompt to end the game
+    function endGame() {
+        if (playerResults == 5) {
+            gameWinner.textContent = "Congratulations! You Win!";
+            document.getElementById("rock").disabled = true;
+            document.getElementById("paper").disabled = true;
+            document.getElementById("scissors").disabled = true;
+        } else if (computerResults == 5) {
+            gameWinner.textContent = "Computer Wins! Better Luck Next Time!";
+            document.getElementById("rock").disabled = true;
+            document.getElementById("paper").disabled = true;
+            document.getElementById("scissors").disabled = true;   
+        }
+    }
 }
-
-function getOccurrence(array, value) {
-    var count = 0;
-    array.forEach((v) => (v === value && count++));
-    return count;
-}
-
-console.log("Final Score:");
-console.log("Computer: ", getOccurrence(scoreboard, "Computer Wins"));
-console.log("Player: ", getOccurrence(scoreboard, "Player Wins"));
-console.log("Ties: ", getOccurrence(scoreboard, "Tie"));
-
-// const initialSelection = "ROCK";
-// const playerSelection = initialSelection.toLowerCase();
-// const computerSelection = getComputerChoice();
-// console.log(`You chose ${playerSelection}`);
-// console.log(`Computer chose ${computerSelection}`);
-// console.log(playRound(playerSelection, computerSelection));
+//call start function to display the desired text on screen
+start();
